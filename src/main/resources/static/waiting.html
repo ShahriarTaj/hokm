@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<title>Waiting...</title>
+</title>
+<meta http-equiv="refresh" content="10">
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+    var sse = new EventSource('/sse/hakem');
+    sse.onmessage = function (evt) {
+      var el = document.getElementById('sse');
+      if (evt.data != null) {
+        console.log(evt.data);
+        if (evt.data == "HOKM") {
+          setHakem();
+        }
+      }
+
+    };
+    function setHakem() {
+      // $.ajax({
+      //   url: "/api/newgame", success: function (result) {
+      //     console.log("dealt a new hand");
+      //   }
+      // });
+
+      // $.ajax({
+      //   url: "/api/chooseHakem/", success: function (result) {
+      window.location.replace("/HokmTable.html");
+      //   }
+      // });
+
+    };
+    function onClick() {
+      $.ajax({
+        url: "/api/playerCount", success: function (result) {
+          var totalRowCount = parseInt(result, 10);
+          // if (totalRowCount === 4) {
+          //   setHakem();
+          // }
+          // else {
+          $.ajax({
+            url: "/api/playerNames", success: function (result) {
+              console.log(result);
+              document.getElementById("tableData").innerHTML = result;
+            }
+          });
+
+          //}
+        }
+      });
+    };
+
+
+    onClick();
+
+  </script>
+</head>
+
+<body>
+
+  <div id="tableData"></div>
+
+</body>
+
+</html>

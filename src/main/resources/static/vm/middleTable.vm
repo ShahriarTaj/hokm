@@ -1,0 +1,6 @@
+$playerName
+<label for="${cardId}" class="card rank-${rankLowerCase} ${suitAbbreviation}">
+    <span class="rank">${rank}</span>
+    <span class="suit">${cardIcon}</span>
+    <input type="checkbox" name="${cardId}" id="${cardId}" onClick='removeCard(this);' />
+</label>

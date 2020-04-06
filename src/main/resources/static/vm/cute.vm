@@ -1,0 +1,16 @@
+
+#if ($isCurrentPlayer)
+<li>
+<label for="${cardId}" class="card rank-${rankLowerCase} ${suitAbbreviation}">
+    <span class="rank">${rank}</span>
+    <span class="suit">${cardIcon}</span>
+    #if ($yourturn)
+    <input type="checkbox" name="${cardId}" id="${cardId}" onClick='setHokm(this);' />
+    #end
+</label>
+</li>
+#else
+<li>
+<div class="card back">*</div>
+</li>
+#end

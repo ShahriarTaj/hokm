@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Hokm</title>
+    <link rel="stylesheet" type="text/css" href="cards.css" media="screen" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="table.css">
+
+    <script>
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        thisPlayer = getCookie("player");
+        eventSource = "/sse/" + thisPlayer + "/";
+        var sse = new EventSource(eventSource);
+        sse.onmessage = function (evt) {
+            if (evt.data != null) {
+                console.log(evt.data);
+                if (evt.data == "THREW" || evt.data == "HOKM" || evt.data == "HAKEM") {
+                    onSetTable();
+                }
+            }
+
+        };
+        var hokm = null;
+    
+
+
+        function populateCards(grid, number) {
+            //console.log("Populating grid " + grid + " with player " + number)
+            var completedUrl = "/api/getCardsHtml/" + number + "/";
+            $.ajax({
+                url: completedUrl, success: function (result) {
+                    document.getElementById(grid).innerHTML = result;
+                }
+            });
+
+        };
+        function setMiddleTable() {
+            //console.log("setting middle table)");
+            var completedUrl = "/api/middleTable";
+            $.ajax({
+                url: completedUrl, success: function (result) {
+                    x = result;
+                    document.getElementById("logo").innerHTML = x;
+                    setScores();
+                }, error: function (err) {
+                    alert(err);
+                }
+
+            });
+        };
+        function setScores() {
+            //console.log("setting middle table)");
+            var completedUrl = "/api/scores";
+            $.ajax({
+                url: completedUrl, success: function (result) {
+                    x = result;
+                    document.getElementById("scores").innerHTML = x;
+                }, error: function (err) {
+                    alert(err);
+                }
+
+            });
+        };
+
+        function newSet() {
+            var completedUrl = "/api/newSet";
+            $.ajax({
+                url: completedUrl, success: function (result) {
+                }, error: function (err) {
+                    alert(err.responseText);
+                }
+
+            });
+
+        }
+
+        function removeCard(cb) {
+            var completedUrl = "api/removeCardFromMiddle/" + cb.name + "/";
+            $.ajax({
+                url: completedUrl, success: function (result) {
+                    hokm = result;
+                    onSetTable();
+                }, error: function (er) {
+                        x = JSON.parse(er.responseText);
+                        alert(x.message);
+                    }
+
+            });
+        }
+
+        function setHokm(cb) {
+            //console.log("cb " + cb.checked + " hokm: " + hokm);
+            if (hokm === null || hokm == "") {
+                if (cb.checked == true) {
+                    var ok = confirm("Are you sure you want to make this the Hokm card?");
+                    if (ok == true) {
+                        var completedUrl = "/api/setHokm/" + cb.name + "/";
+                        $.ajax({
+                            url: completedUrl, success: function (result) {
+                                hokm = result;
+                                onSetTable();
+                            }
+
+                        });
+                    }
+                }
+                else {
+                    document.getElementsByName(cb.name).checked = false;
+                }
+            }
+            else {
+
+                var completedUrl = "/api/throwCard/" + cb.name + "/";
+                $.ajax({
+                    url: completedUrl, success: function (result) {
+                        hokm = result;
+                        onSetTable();
+                        //window.location.replace("/HokmTable.html");
+                    }, error: function (er) {
+                        x = JSON.parse(er.responseText);
+                        alert(x.message);
+                    }
+
+                });
+            }
+        };
+
+        function onSetTable() {
+            //console.log("On set table");
+            $.ajax({
+                url: "/api/hokm", success: function (result) {
+                    hokm = result;
+                    //console.log("in populate cards hokm is set to " + hokm);
+                }
+            });
+            for (i = 1; i <= 4; i++) {
+                //console.log("Poplulating palyer " + i);
+                populateCards("grid" + i, i);
+            }
+
+            setMiddleTable();
+
+        };
+
+        window.onunload = function () {
+            sse.close();
+        }
+
+        onSetTable();
+
+    </script>
+
+</head>
+
+
+<body>
+    <div id="logo" class="logo"></div>
+    <div id="scores" class="scores"></div>
+    <form id="varagh" name="varagh">
+        <div class="info-box">
+            <div id="grid1" class="info-item grid1">1</div>
+            <div id="grid2" class="info-item grid2">2</div>
+            <div id="grid3" class="info-item grid3">3</div>
+            <div id="grid4" class="info-item grid4">4</div>
+        </div>
+    </form>
+</body>
+
+</html>
