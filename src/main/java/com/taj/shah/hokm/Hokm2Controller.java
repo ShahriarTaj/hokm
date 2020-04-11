@@ -150,9 +150,9 @@ public class Hokm2Controller {
         response.addCookie(cookie);
 
         addPlayer(thisPlayer);
-//        addPlayer("Amir");
-//        addPlayer("Hamid");
-//        addPlayer("Hossain");
+        addPlayer("Amir");
+        addPlayer("Hamid");
+        addPlayer("Hossain");
 
         synchronized (this) {
             if (match.getPlayerCount() == 4 && !currentSet.cardsHaveBeenDealt) {
@@ -276,14 +276,15 @@ public class Hokm2Controller {
                 sb.append("<th>");
                 sb.append("The winner is: " + currentSet.winningPlayer.name);
                 sb.append("</th>");
+                currentSet.whoseTurn = currentSet.winningPlayer;
 
             }
             if (currentSet.isSetOver) {
                 sb.append("<th>");
                 if (match.teamBscore >= numberOfHandsToWinTheSet) {
-                    sb.append("Team B wins the set");
+                    sb.append("Team B wins");
                 } else {
-                    sb.append("Team A wins the set");
+                    sb.append("Team A wins");
                 }
                 sb.append("</th>");
 
@@ -305,16 +306,16 @@ public class Hokm2Controller {
                 sb.append("</th>");
             }
             sb.append("<th>");
-            sb.append("Team A Score (this hand)" + match.teamAscore);
+            sb.append("Team A (this hand)" + match.teamAscore);
             sb.append("</th>");
             sb.append("<th>");
-            sb.append("Team B Score (this hand) " + match.teamBscore);
+            sb.append("Team B (this hand) " + match.teamBscore);
             sb.append("</th>");
             sb.append("<th>");
-            sb.append("Team A Score (overall)" + match.teamAoverallScore);
+            sb.append("Team A (overall)" + match.teamAoverallScore);
             sb.append("</th>");
             sb.append("<th>");
-            sb.append("Team B Score (overall) " + match.teamBoverallScore);
+            sb.append("Team B (overall) " + match.teamBoverallScore);
             sb.append("</th>");
             sb.append("</table>");
         }
