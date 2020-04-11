@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import sun.misc.BASE64Encoder;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
@@ -81,7 +82,7 @@ public class Hokm2Controller {
                 currentSet.isSetOver = false;
             }
         }
-        System.out.println(currentSet);
+        //System.out.println(currentSet);
         sseQueue.add("THREW");
         return winp.playerNumber.toString();
     }
@@ -144,14 +145,14 @@ public class Hokm2Controller {
 
 
         String thisPlayer = request.getParameter("uname");
-        Cookie cookie = new Cookie("player", URLEncoder.encode(thisPlayer,"UTF-8"));
+        Cookie cookie = new Cookie("player", new String(Base64.getEncoder().encode(thisPlayer.getBytes())));
         cookie.setMaxAge(60 * 60 * 10);
         cookie.setPath("/");
         response.addCookie(cookie);
 
         addPlayer(thisPlayer);
-        addPlayer("Amir");
-        addPlayer("Hamid");
+        addPlayer("Adam Joon");
+        addPlayer("حمید");
         addPlayer("Hossain");
 
         synchronized (this) {
@@ -296,8 +297,8 @@ public class Hokm2Controller {
                     currentSet.whoseTurn = next;
                     setHakem( next.name );
                 } else {
-                    System.out.println("Winner is " + currentSet.winningPlayer);
-                    System.out.println("Hakem remains " + currentSet.hakem);
+                    //System.out.println("Winner is " + currentSet.winningPlayer);
+                    //System.out.println("Hakem remains " + currentSet.hakem);
                 }
             }
             if (currentSet.whoseTurn != null && currentSet.whoseTurn.name.equalsIgnoreCase(cookiedPlayer) && currentSet.thrownCards.keySet().size() == 4) {
@@ -521,7 +522,7 @@ public class Hokm2Controller {
                 .filter(c -> c.getName().equalsIgnoreCase(name))
                 .map(c -> c.getValue())
                 .collect(Collectors.joining());
-        return URLDecoder.decode(value, "UTF-8");
+        return new String(Base64.getDecoder().decode(value.getBytes()));
     }
 
 }
