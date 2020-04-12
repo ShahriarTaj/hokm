@@ -152,7 +152,7 @@ public class Hokm2Controller {
 
         addPlayer(thisPlayer);
         addPlayer("Adam Joon");
-        addPlayer("حمید");
+        addPlayer("Hamid");
         addPlayer("Hossain");
 
         synchronized (this) {
@@ -433,7 +433,13 @@ public class Hokm2Controller {
 
             Template template = Velocity.getTemplate("/static/vm/cute.vm");
             List<Card> cards;
+            if ( playerName.equalsIgnoreCase(currentSet.whoseTurn.name)){
+                sb.append("<input type=\"text\" disabled='red'  background='red' value=\"");
+            }
             sb.append(playerName + " " + player.teamName + " " + playerNumber);
+            if ( playerName.equalsIgnoreCase(currentSet.whoseTurn.name)){
+                sb.append("\">");
+            }
             if (player.isHakem) {
                 sb.append(" (Hakem) ");
             }

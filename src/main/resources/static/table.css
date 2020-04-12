@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+
+input[type=text]:disabled {
+   background: red;
+ }
+
 .info-box {
   background-color: rgba(27, 238, 157, 0.788);
   margin: 2rem auto 0 auto;
