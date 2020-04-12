@@ -96,10 +96,20 @@ public class Hokm2Controller {
         Player player = null;
         synchronized (this) {
             if (currentSet.thrownCards.containsKey(playerName)) {
-                throw new Exception(playerName + " عمو، چند تا کارت میخوای بندازی؟ ");
+                throw new Exception( " عمو، چند تا کارت میخوای بندازی؟ " + playerName);
+            }
+            //if this card's suite is NOT the suit of the first but this player has the card tell him, don't be a jerk
+            Optional<Card> oc = currentSet.thrownCards.values().stream().findFirst();
+            player = match.getPlayer(playerName);
+            if (oc.isPresent()){
+                Card firstCard = oc.get();
+                System.out.println("Trying to see if " + player + "\nhas " + firstCard);
+                if (player.hasSuite(firstCard) && !card.abbrev.substring(1).equalsIgnoreCase(firstCard.abbrev.substring(1))){
+                    throw new Exception( " عمو تقلب نکن تو هنوز از این کارتها داری " + playerName);
+                }
+
             }
             currentSet.thrownCards.put(playerName, card);
-            player = match.getPlayer(playerName);
             player.removeCard(card);
             Integer x = player.playerNumber;
             Integer y = getNextPlayerAfter(x);
@@ -151,9 +161,9 @@ public class Hokm2Controller {
         response.addCookie(cookie);
 
         addPlayer(thisPlayer);
-        addPlayer("Adam Joon");
-        addPlayer("Hamid");
-        addPlayer("Hossain");
+//        addPlayer("Adam Joon");
+//        addPlayer("Hamid");
+//        addPlayer("Hossain");
 
         synchronized (this) {
             if (match.getPlayerCount() == 4 && !currentSet.cardsHaveBeenDealt) {
@@ -275,7 +285,7 @@ public class Hokm2Controller {
             }
             if (currentSet.winningPlayer != null) {
                 sb.append("<th>");
-                sb.append("The winner is: " + currentSet.winningPlayer.name);
+                sb.append("<p class='blink' > The winner is: " + currentSet.winningPlayer.name + "</p>");
                 sb.append("</th>");
                 currentSet.whoseTurn = currentSet.winningPlayer;
 
@@ -296,9 +306,6 @@ public class Hokm2Controller {
                     Player next = match.getPlayer(whoNext);
                     currentSet.whoseTurn = next;
                     setHakem( next.name );
-                } else {
-                    //System.out.println("Winner is " + currentSet.winningPlayer);
-                    //System.out.println("Hakem remains " + currentSet.hakem);
                 }
             }
             if (currentSet.whoseTurn != null && currentSet.whoseTurn.name.equalsIgnoreCase(cookiedPlayer) && currentSet.thrownCards.keySet().size() == 4) {
@@ -394,7 +401,7 @@ public class Hokm2Controller {
                 Card card = x.get();
                 Player playerWhoWantsToRemoveTheCard = currentSet.getPlayerWhoHasTheThrownCard(card);
                 if (!playerWhoWantsToRemoveTheCard.name.equalsIgnoreCase(cookiedPlayer)) {
-                    throw new Exception("  عمو، کارت یکی دیگه رو ور ندار  ");
+                    throw new Exception("  عمو، کارت یکی دیگه رو ور ندار  " + cookiedPlayer);
                 }
                 if (!playerWhoWantsToRemoveTheCard.hand.cards.contains(card)) {
                     playerWhoWantsToRemoveTheCard.hand.cards.add(card);

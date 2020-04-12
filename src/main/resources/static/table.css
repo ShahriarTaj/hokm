@@ -2,10 +2,17 @@
   box-sizing: border-box;
 }
 
-
-input[type=text]:disabled {
-   background: red;
- }
+input[type="text"]:disabled {
+  background: red;
+}
+.blink {
+  animation: blinker 1.4s linear infinite;
+  color: black;
+  font-weight: bold;
+}
+@keyframes blinker {
+  100% { opacity: 0; }
+}
 
 .info-box {
   background-color: rgba(27, 238, 157, 0.788);

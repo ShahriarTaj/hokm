@@ -56,4 +56,8 @@ public class Player {
                 ", playerNumber=" + playerNumber +
                 '}';
     }
+
+    public boolean hasSuite(Card firstCard) {
+        return hand.cards.stream().map(c -> {System.out.println(c); return c;}).filter(c -> c.abbrev.substring(1).equalsIgnoreCase(firstCard.abbrev.substring(1))).findAny().isPresent();
+    }
 }
