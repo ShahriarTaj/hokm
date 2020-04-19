@@ -161,9 +161,9 @@ public class Hokm2Controller {
         response.addCookie(cookie);
 
         addPlayer(thisPlayer);
-//        addPlayer("Adam Joon");
-//        addPlayer("Hamid");
-//        addPlayer("Hossain");
+        addPlayer("Adam Joon");
+        addPlayer("Hamid");
+        addPlayer("Hossain");
 
         synchronized (this) {
             if (match.getPlayerCount() == 4 && !currentSet.cardsHaveBeenDealt) {
@@ -239,7 +239,7 @@ public class Hokm2Controller {
     public String getscores(HttpServletRequest request) throws Exception {
         String cookiedPlayer = getCookieValue(request, "player");
         StringBuilder sb = new StringBuilder();
-        sb.append("<table style=\"width:100%\" border-spacing= '5px'>");
+        sb.append("<table style=\"width:100%\" height='25px' border=\"0\" >");
         sb.append("<th>");
         if (currentSet.hokm != null) {
             sb.append("Hokm: ");
@@ -261,7 +261,7 @@ public class Hokm2Controller {
         }
         synchronized (this) {
             Player hakem = match.getPlayer(currentSet.hakem);
-            if (currentSet.thrownCards.keySet().size() == 4 && !currentSet.isSetOver) {
+            if (currentSet.thrownCards.keySet().size() == 4 && !currentSet.isSetOver ) {
                 Card winningCard = Card.findWinninCard(currentSet.thrownCards.values(), currentSet.hokm);
                 boolean incrementScores = (currentSet.winningPlayer == null);
                 currentSet.winningPlayer = currentSet.getPlayerWhoHasTheThrownCard(winningCard);
@@ -290,7 +290,7 @@ public class Hokm2Controller {
                 currentSet.whoseTurn = currentSet.winningPlayer;
 
             }
-            if (currentSet.isSetOver) {
+            if (currentSet.isSetOver && currentSet.winningPlayer != null) {
                 sb.append("<th>");
                 if (match.teamBscore >= numberOfHandsToWinTheSet) {
                     sb.append("Team B wins");
@@ -310,20 +310,20 @@ public class Hokm2Controller {
             }
             if (currentSet.whoseTurn != null && currentSet.whoseTurn.name.equalsIgnoreCase(cookiedPlayer) && currentSet.thrownCards.keySet().size() == 4) {
                 sb.append("<th>");
-                sb.append("<input type='button' value='Next' onClick='newSet()'>");
+                sb.append("<input type='button' id='nextbutton' value='Next' onClick='newSet()'>");
                 sb.append("</th>");
             }
             sb.append("<th>");
-            sb.append("Team A (this hand)" + match.teamAscore);
+            sb.append("A (this hand)" + match.teamAscore);
             sb.append("</th>");
             sb.append("<th>");
-            sb.append("Team B (this hand) " + match.teamBscore);
+            sb.append("B (this hand) " + match.teamBscore);
             sb.append("</th>");
             sb.append("<th>");
-            sb.append("Team A (overall)" + match.teamAoverallScore);
+            sb.append("A (overall)" + match.teamAoverallScore);
             sb.append("</th>");
             sb.append("<th>");
-            sb.append("Team B (overall) " + match.teamBoverallScore);
+            sb.append("B (overall) " + match.teamBoverallScore);
             sb.append("</th>");
             sb.append("</table>");
         }
