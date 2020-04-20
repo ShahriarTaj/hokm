@@ -239,8 +239,8 @@ public class Hokm2Controller {
     public String getscores(HttpServletRequest request) throws Exception {
         String cookiedPlayer = getCookieValue(request, "player");
         StringBuilder sb = new StringBuilder();
-        sb.append("<table style=\"width:100%\" height='25px' border=\"0\" >");
-        sb.append("<th>");
+        sb.append("<table style=\"width:100%\"  height='30px' border=\"0\" >");
+        sb.append("<th style=\"font-size:30px\">");
         if (currentSet.hokm != null) {
             sb.append("Hokm: ");
             switch (currentSet.hokm) {
