@@ -91,6 +91,7 @@
 
         function newSet() {
             var completedUrl = "/api/newSet";
+            b = document.getElementById("nextbutton").style.display = "none";
             $.ajax({
                 url: completedUrl, success: function (result) {
                 }, error: function (err) {
